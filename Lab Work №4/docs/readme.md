@@ -274,9 +274,86 @@ API выполняет только операции управления дан
 }
 ```
 
-
-
 ## Тестирование API
+
+### Endpoint 1: Создание источника
+#### Тест 1 — успешное создание
+
+**Метод:** `POST`
+
+**URL:** `{{base_url}}/api/v1/sources`
+
+**Body:**
+```json
+{
+  "name": "CoinDesk",
+  "url": "https://coindesk.com",
+  "type": "rss"
+}
+```
+<img width="1280" height="467" alt="image" src="https://github.com/user-attachments/assets/c31f85ff-3da9-45a8-8b1b-c6af1d50c83f" />
+<img width="1280" height="459" alt="image" src="https://github.com/user-attachments/assets/aead0735-8554-4306-aed7-8f79dad5f109" />
+
+**Ожидаемый ответ:**
+- 201 Created
+- JSON с id и created_at
+
+**Tests**
+```javascript
+pm.test("Status 201", () => {
+    pm.response.to.have.status(201);
+});
+
+pm.test("Response contains id", () => {
+    pm.expect(pm.response.json()).to.have.property("id");
+});
+```
+
+<img width="1280" height="483" alt="image" src="https://github.com/user-attachments/assets/cd1b729b-8020-4626-9bc2-9011488702a5" />
+
+❌ Тест 2 — ошибка валидации
+
+**Body:** `{}`
+
+
+**Ожидаемый ответ:**
+- 422 Unprocessable Entity
+
+**Tests:**
+```javascript
+pm.test("Validation error", () => {
+    pm.response.to.have.status(422);
+});
+```
+<img width="1740" height="810" alt="image" src="https://github.com/user-attachments/assets/1602aac5-5628-4fe3-910e-8f2636c539ac" />
+<img width="1746" height="448" alt="image" src="https://github.com/user-attachments/assets/25bc41ef-75b5-4143-a003-b6365bd3391e" />
+
+### Endpoint 2: Получить все источники
+#### Тест 1 — список источников
+
+**Метод:** `GET`
+**URL:** `{{base_url}}/api/v1/sources`
+
+**Ожидаемый ответ:**
+- 200 OK
+- Массив
+
+**Tests**
+```json
+pm.test("Status 200", () => {
+    pm.response.to.have.status(200);
+});
+
+pm.test("Response is array", () => {
+    pm.expect(pm.response.json()).to.be.an("array");
+});
+```
+
+<img width="1361" height="778" alt="image" src="https://github.com/user-attachments/assets/6ecb812c-e1e1-42de-993a-51842237f98e" />
+<img width="1371" height="559" alt="image" src="https://github.com/user-attachments/assets/fcf7a676-8e32-4c64-b2a2-c82f90262ff8" />
+
+
+
 <
 По каждому реализуемому API предоставить следующую информацию: 
 - Тестируемое API.
